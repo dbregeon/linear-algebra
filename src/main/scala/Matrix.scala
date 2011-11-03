@@ -5,11 +5,19 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Int, val columns : Int, val
 	def -(m : Matrix[Rows, Columns]) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => (values(index) - m.values(index))))
 	def *:(lambda : BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => lambda * values(index)))
 	def *[OtherColumns <: Nat](m : Matrix[Columns, OtherColumns]) : Matrix[Rows, OtherColumns] = {
-		var multiplicationValues = new Array[BigDecimal](rows * m.columns)
+		var multiplicationValues : Array[BigDecimal] = Array.tabulate(values.length) (index => {
+			var row = index % m.columns
+			var column = index / m.columns
+			var result : BigDecimal = 0
+			for (i <- 0 until columns - 1) {
+				result = result + (apply(row, i) * m(i, column))
+			}
+			result
+		})
 		new Matrix[Rows, OtherColumns](rows, m.columns, multiplicationValues)
 	}
 	
-	def cell(row : Int, column : Int) : BigDecimal = values(row*columns + column)
+	def apply(row : Int, column : Int) : BigDecimal = values(row*columns + column)
 	
 	override def equals(that : Any): Boolean = that match {
 		case that : Matrix[_,_] => rows == that.rows && columns == that.columns && valuesEquals(that.values)
@@ -42,6 +50,6 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Int, val columns : Int, val
 
 object Matrix {	
 	implicit def apply[Rows <: Nat, Columns <: Nat](rows : Rows, columns : Columns, values : Array[BigDecimal]) : Matrix[Rows, Columns] = {
-		new Matrix[Rows, Columns](rows.eval, columns.eval, values)
+		new Matrix[Rows, Columns](rows.value, columns.value, values)
 	}
 }

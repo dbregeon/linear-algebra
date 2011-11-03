@@ -1,20 +1,16 @@
 object Nat {
-  abstract class Nat {
-  	def eval: Int
-  	
-  	def successor = new Succ[this.type](this.eval)
+  abstract class Nat(val value :Int) {
+  	def successor = new Succ[this.type](value)
   }
-  class Zero extends Nat {
-  	def eval = 0
+  class Zero extends Nat(0) {
   }
-  class Succ[T <: Nat](value : Int) extends Nat {
-  	def eval = value
+  class Succ[T <: Nat](value : Int) extends Nat(value + 1) {
   }
   
  
   def apply(number:Int) : Nat = {
   	var result : Nat = new Zero()
-  	for (i <- 1 until number) {
+  	for (i <- 0 until number) {
   		result = result.successor
   	}
   	result
