@@ -51,4 +51,8 @@ object MatrixSpecification extends Properties("Matrix") {
 	property("one is the neutral element of the scalar multiplication") = forAll(matrixGenerator) {(m : Matrix[_, _]) => 
 		(1 *: m) == m
 	}
+	
+	property("transpose of transpose is the same matrix") = forAll(matrixGenerator) {(m : Matrix[_, _]) => 
+		(m.transpose).transpose == m
+	}
 }
