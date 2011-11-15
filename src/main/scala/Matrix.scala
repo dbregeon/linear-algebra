@@ -4,6 +4,7 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Int, val columns : Int, val
 	def +(m : Matrix[Rows, Columns]) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => (values(index) + m.values(index))))
 	def -(m : Matrix[Rows, Columns]) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => (values(index) - m.values(index))))
 	def *:(lambda : BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => lambda * values(index)))
+	def /(lambda : BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => values(index) / lambda))
 	def *[OtherColumns <: Nat](m : Matrix[Columns, OtherColumns]) : Matrix[Rows, OtherColumns] = {
 		var multiplicationValues : Array[BigDecimal] = Array.tabulate(rows * m.columns) (index => {
 			var row = index / m.columns
@@ -53,5 +54,13 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Int, val columns : Int, val
 object Matrix {	
 	implicit def apply[Rows <: Nat, Columns <: Nat](rows : Rows, columns : Columns, values : Array[BigDecimal]) : Matrix[Rows, Columns] = {
 		new Matrix[Rows, Columns](rows.value, columns.value, values)
+	}
+}
+
+object Vector {
+	type Vector[M <: Nat]=  Matrix[M, Succ[Zero]]
+	
+	implicit def apply[Rows <: Nat](rows : Rows, values : Array[BigDecimal]) : Vector[Rows] = {
+		new Vector[Rows](rows.value, 1, values)
 	}
 }
