@@ -8,7 +8,7 @@ object LinearRegression {
 	}
 	
 	def cost[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], theta : Vector[N], lambda : BigDecimal) : BigDecimal = {
-		val scale = 2 * X.rows
+		val scale = 2 * X.rowCount
 		val difference = X * theta - y
 		(square(difference)(0, 0) + lambda * square(biasless(theta))(0,0)) / scale
 	}
@@ -18,7 +18,7 @@ object LinearRegression {
 	}
 	
 	def gradient[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], theta : Vector[N], lambda : BigDecimal) :Vector[N] = {
-		val scale = X.rows
+		val scale = X.rowCount
 		val difference = X * theta - y
 		(X.transpose() * difference + lambda *: biasless(theta)) / scale
 	}

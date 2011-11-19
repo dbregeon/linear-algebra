@@ -5,13 +5,13 @@ class MatrixSpec extends Specification {
 		"have 2 rows" in {
 			var m = Matrix(Nat(2), Nat(3), Array[BigDecimal](1, 2, 3, 4, 5, 6))
 			
-			m.rows must be_==(2)
+			m.rowCount must be_==(2)
 		}
 		
 		"have 3 columns" in {
 			var m = Matrix(Nat(2), Nat(3), Array[BigDecimal](1, 2, 3, 4, 5, 6))
 			
-			m.columns must be_==(3)
+			m.columnCount must be_==(3)
 		}
 	}
 	
@@ -19,13 +19,13 @@ class MatrixSpec extends Specification {
 		"have 2 rows" in {
 			var v = Vector(Nat(2), Array[BigDecimal](1, 2))
 			
-			v.rows must be_==(2)
+			v.rowCount must be_==(2)
 		}
 		
 		"have 1 column" in {
 			var v = Vector(Nat(2), Array[BigDecimal](1, 2))
 			
-			v.columns must be_==(1)
+			v.columnCount must be_==(1)
 		}
 	}
 
