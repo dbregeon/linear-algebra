@@ -5,6 +5,8 @@ import Nat._
 class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns, val values : Array[BigDecimal]) extends Serializable {
 	def rowCount : Int = rows.rank
 	def columnCount : Int = columns.rank
+	
+	def size : (Rows, Columns) = (rows, columns)
 
 	def +(m : Matrix[Rows, Columns]) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => (values(index) + m.values(index))))
 	def -(m : Matrix[Rows, Columns]) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => (values(index) - m.values(index))))
@@ -85,6 +87,11 @@ object Matrix {
 	}
 	
 	def apply(file : String) : Matrix[Nat, Nat] = buildFromTuple(loadData(file))
+	
+	def ones[Rows <: Nat, Columns <: Nat](tuple : (Rows,Columns)) : Matrix[Rows, Columns] = {
+		val (rows, columns) = tuple
+		apply(rows, columns, Array.tabulate(rows.rank * columns.rank) (index => 1))
+	}
 	
 	private
 	

@@ -8,8 +8,8 @@ object LogSpecification extends Properties("Log") {
 	import Arbitrary.arbitrary
 	
 	val unlimitedBigDecimalGen = for {
-		  n <- arbitrary[Double] suchThat (_ > 0)
-	} yield (BigDecimal(n, java.math.MathContext.UNLIMITED))
+		  n <- arbitrary[Double]
+	} yield (BigDecimal(scala.math.abs(n) + 0.00000001, java.math.MathContext.UNLIMITED))
 	
 	val matrixGenerator = for {
 		  n <- Gen.choose(1, 100)

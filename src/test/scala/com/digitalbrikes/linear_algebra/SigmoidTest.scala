@@ -18,10 +18,10 @@ object SigmoidSpecification extends Properties("Sigmoid") {
 	} yield (Matrix(Nat(n), Nat(m), values1))
 
 	property("sigmoid calculate the sigmoid of the BigDecimal") = forAll(unlimitedBigDecimalGen) {x : BigDecimal  => 
-		sigmoid(x) == 1 / (1 + scala.math.exp(x.doubleValue))
+		sigmoid(x) == 1 / (1 + scala.math.exp(-1. * x.doubleValue))
 	}
 	
 	property("sigmoid calculate the sigmoid all the elements in the matrix") = forAll(matrixGenerator) {X : Matrix[Nat, Nat]  => 
-		sigmoid(X) == X.map( x => 1 / (1 + scala.math.exp(x.doubleValue)))
+		sigmoid(X) == X.map( x => 1 / (1 + scala.math.exp(-1 * x.doubleValue)))
 	}
 }
