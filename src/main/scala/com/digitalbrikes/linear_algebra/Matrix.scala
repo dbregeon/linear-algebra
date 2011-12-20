@@ -24,6 +24,10 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 		})
 		new Matrix[Rows, OtherColumns](rows, m.columns, multiplicationValues)
 	}
+
+	def norm() : Matrix[Columns,Columns] = {
+		transpose * this
+	}
 	
 	def map(function : (BigDecimal => BigDecimal)) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => function(values(index))))
 	
@@ -91,6 +95,11 @@ object Matrix {
 	def ones[Rows <: Nat, Columns <: Nat](tuple : (Rows,Columns)) : Matrix[Rows, Columns] = {
 		val (rows, columns) = tuple
 		apply(rows, columns, Array.tabulate(rows.rank * columns.rank) (index => 1))
+	}
+	
+	def zeros[Rows <: Nat, Columns <: Nat](tuple : (Rows,Columns)) : Matrix[Rows, Columns] = {
+		val (rows, columns) = tuple
+		apply(rows, columns, Array.tabulate(rows.rank * columns.rank) (index => 0))
 	}
 	
 	private
