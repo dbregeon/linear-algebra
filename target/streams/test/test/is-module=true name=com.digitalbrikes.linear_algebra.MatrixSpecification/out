@@ -1,6 +1,0 @@
-[0m[[0minfo[0m] [0m+ Matrix.addition is commutative: OK, passed 100 tests.[0m
-[0m[[0minfo[0m] [0m+ Matrix.subtraction is the inverse of the addition: OK, passed 100 tests.[0m
-[0m[[0minfo[0m] [0m+ Matrix.scalar multiplication is associative: OK, passed 100 tests.[0m
-[0m[[0minfo[0m] [0m+ Matrix.scalar multiplication is associative: OK, passed 100 tests.[0m
-[0m[[0minfo[0m] [0m+ Matrix.one is the neutral element of the scalar multiplication: OK, passed 100 tests.[0m
-[0m[[0minfo[0m] [0m+ Matrix.transpose of transpose is the same matrix: OK, passed 100 tests.[0m
