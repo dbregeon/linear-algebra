@@ -2,7 +2,7 @@ package com.digitalbrikes.linear_algebra
 
 import Nat._
 
-class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns, val values : Array[BigDecimal]) extends Serializable {
+class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns, private val values : Array[BigDecimal]) extends Serializable {
 	def rowCount : Int = rows.rank
 	def columnCount : Int = columns.rank
 	
@@ -13,14 +13,10 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 	def *:(lambda : BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => lambda * values(index)))
 	def /(lambda : BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => values(index) / lambda))
 	def *[OtherColumns <: Nat](m : Matrix[Columns, OtherColumns]) : Matrix[Rows, OtherColumns] = {
-		var multiplicationValues : Array[BigDecimal] = Array.tabulate(rowCount * m.columnCount) (index => {
-			var row = index / m.columnCount
-			var column = index % m.columnCount
-			var result : BigDecimal = 0
-			for (i <- 0 until columns) {
-				result = result + (apply(row, i) * m(i, column))
-			}
-			result
+		val multiplicationValues : Array[BigDecimal] = Array.tabulate(rowCount * m.columnCount) (index => {
+			val row = index / m.columnCount
+			val column = index % m.columnCount
+			(0 to columns -1).foldLeft[BigDecimal](0)((accu : BigDecimal, counter : Int) => accu + (apply(row, counter) * m(counter, column)))
 		})
 		new Matrix[Rows, OtherColumns](rows, m.columns, multiplicationValues)
 	}
@@ -34,21 +30,19 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 	def columns(range : IndexedSeq[Int]) : Matrix[Rows, Nat] = {
 		val subValues = new Array[BigDecimal](range.size * rowCount)
 		val subColumns = Nat(range.size)
-		for (currentRow <- 0 until rowCount) {
-			var currentColumn = 0
-			range.foreach((column) => {
-				subValues(currentRow * subColumns + currentColumn)= values(currentRow*columnCount + column)
+		(0 to rowCount -1).foreach(currentRow => {
+			range.foreach(column => {
+				subValues(currentRow * subColumns)= values(currentRow*columnCount + column)
 			})
-		}
+		})
 		new Matrix(rows, subColumns, subValues)
 	}
 	
 	def column(column : Int) : Matrix[Rows, Succ[Zero]] = {
 		val subValues = new Array[BigDecimal](rowCount)
 		
-		for (currentRow <- 0 until rowCount) {
-			subValues(currentRow)= values(currentRow*columnCount + column)
-		}
+		(0 to rowCount -1).foreach(currentRow => subValues(currentRow)= values(currentRow*columnCount + column))
+		
 		new Matrix(rows, one, subValues) 
 	}
 	
@@ -61,27 +55,14 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 		case _             		=> false
 	}
 	
-	override def toString(): String = {
-		var result = "\n"
-		for (i <- 0 until rowCount) {
-			result += "\t"
-			for (j <- 0 until columnCount) {
-				result += "\t" + values(i * columnCount + j)
-			}
-			result += "\t\n"
-		}
-		result
-	}
+	override def toString(): String =
+		(0 to rowCount -1).foldLeft("\n")((accu : String, rowCounter : Int) =>
+			(0 to columnCount -1).foldLeft(accu + "\t")((innerAccu : String, columnCounter : Int) =>
+				innerAccu + "\t" + values(rowCounter * columnCount + columnCounter)) + "\t\n")
 		
 	private
 	def valuesEquals(otherValues: Array[BigDecimal]): Boolean = {
-		var result = true
-		var i = 0
-		while ((i < values.length) && result) {
-			result = result && (values(i) == otherValues(i))
-			i += 1
-		}
-		result
+		(0 to values.length -1).forall(counter => values(counter) == otherValues(counter))
 	}
 }
 

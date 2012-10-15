@@ -1,0 +1,18 @@
+#Successful Tests
+#Mon Oct 15 16:43:59 PDT 2012
+com.digitalbrikes.linear_algebra.SigmoidSpecification=1350344628733
+com.digitalbrikes.machine_learning.ValidationResultSpec=1350344629719
+com.digitalbrikes.machine_learning.ValidationPointSpec=1350344629561
+com.digitalbrikes.machine_learning.LinearCostFunctionSpec=1350344629529
+com.digitalbrikes.linear_algebra.MatrixSpec=1350344619627
+com.digitalbrikes.linear_algebra.LogSpecification=1350344633182
+com.digitalbrikes.linear_algebra.MatrixSpecification=1350344639079
+com.digitalbrikes.machine_learning.GradientDescentSpec=1350344629347
+BigDecimalSpecification=1350344628912
+com.digitalbrikes.machine_learning.LogisticGradientFunctionSpec=1350344629763
+com.digitalbrikes.linear_algebra.NatSpec=1350344629114
+com.digitalbrikes.machine_learning.LogisticCostFunctionSpec=1350344618879
+com.digitalbrikes.machine_learning.GradientDescentSpecification=1350344620687
+com.digitalbrikes.machine_learning.TrainingResultSpec=1350344618883
+com.digitalbrikes.machine_learning.LinearGradientFunctionSpec=1350344618888
+com.digitalbrikes.machine_learning.BaseRegressionSpec=1350344619156

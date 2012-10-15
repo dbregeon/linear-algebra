@@ -1,0 +1,11 @@
+[0m[[0minfo[0m] [0mLogisticGradientFunctionSpec[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mthe logistic gradient function should[0m
+[0m[[0minfo[0m] [0m[32m+[0m compute X' * (sigmoid(X*theta) -y) when lambda is 0[0m
+[0m[[0minfo[0m] [0m[32m+[0m add lambda * Biasless(theta)[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mTotal for specification LogisticGradientFunctionSpec[0m
+[0m[[0minfo[0m] [0m[34mFinished in 33 ms[0m[0m
+[0m[[0minfo[0m] [0m[34m2 examples, 0 failure, 0 error[0m[0m
+[0m[[0minfo[0m] [0m[0m

@@ -1,0 +1,16 @@
+[0m[[0minfo[0m] [0mValidationResultSpec[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mvalidationResult lambda should[0m
+[0m[[0minfo[0m] [0m[32m+[0m return the minimum point's lambda[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mvalidationResult error should[0m
+[0m[[0minfo[0m] [0m[32m+[0m return the minimum point's error[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mvalidationResult apply method should[0m
+[0m[[0minfo[0m] [0m[32m+[0m be the application of the minimum point[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mTotal for specification ValidationResultSpec[0m
+[0m[[0minfo[0m] [0m[34mFinished in 90 ms[0m[0m
+[0m[[0minfo[0m] [0m[34m3 examples, 0 failure, 0 error[0m[0m
+[0m[[0minfo[0m] [0m[0m

@@ -18,11 +18,6 @@ object Nat {
   
   implicit def natToInt(nat : Nat) : Int = nat.rank
    
-  def apply(number:Int) : Nat = {
-  	var result : Nat = zero
-  	for (i <- 0 until number) {
-  		result = result.successor
-  	}
-  	result
-  }
+  def apply(number:Int) : Nat =
+    (0 to number - 1).foldLeft[Nat](zero)((accu : Nat, _ : Int) => accu.successor)
 }

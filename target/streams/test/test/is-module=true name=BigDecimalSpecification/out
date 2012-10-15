@@ -1,0 +1,4 @@
+[0m[[0minfo[0m] [0m+ BigDecimal.addition is commutative: OK, passed 100 tests.[0m
+[0m[[0minfo[0m] [0m+ BigDecimal.subtraction is the inverse of addition: OK, passed 100 tests.[0m
+[0m[[0minfo[0m] [0m+ BigDecimal.multiplication is commutative: OK, passed 100 tests.[0m
+[0m[[0minfo[0m] [0m+ BigDecimal.division is the inverse of multiplication: OK, passed 100 tests.[0m

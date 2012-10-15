@@ -1,0 +1,29 @@
+[0m[[0minfo[0m] [0mLinearRegressionSpec[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mthe training result's training curve should[0m
+[0m[[0minfo[0m] [0m[32m+[0m use zeros as the intial parameters[0m
+[0m[[31merror[0m] [0m[33mx[0m have an error of 23789757.375 for theta0 with a regularization of 1[0m
+[0m[[31merror[0m] [0m   '3543.125' is not equal to '2.3789757375E7' (LinearRegressionSpec.scala:26)[0m
+[0m[[31merror[0m] [0m[33mx[0m have applied a gradient of [6673.75; 559226.25; 47584501.25] from theta0[0m
+[0m[[31merror[0m] [0m   '[0m
+[0m[[31merror[0m] [0m   		83.750	[0m
+[0m[[31merror[0m] [0m   		6858.00	[0m
+[0m[[31merror[0m] [0m   		571030.50	[0m
+[0m[[31merror[0m] [0m   ' is not equal to '[0m
+[0m[[31merror[0m] [0m   		-6673.75	[0m
+[0m[[31merror[0m] [0m   		-559226.25	[0m
+[0m[[31merror[0m] [0m   		-47584501.25	[0m
+[0m[[31merror[0m] [0m   ' (LinearRegressionSpec.scala:32)[0m
+[0m[[31merror[0m] [0mExpected: 		[-667]3.75[]	[0m
+[0m[[31merror[0m] [0m		[-5]5[9226].[25]	[0m
+[0m[[31merror[0m] [0m		[-4]7[5845]0[1].[25]	[0m
+[0m[[31merror[0m] [0mActual:   		[8]3.75[0]	[0m
+[0m[[31merror[0m] [0m		[68]5[8].[00]	[0m
+[0m[[31merror[0m] [0m		[5]7[103]0[].[50]	[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mTotal for specification LinearRegressionSpec[0m
+[0m[[0minfo[0m] [0m[34mFinished in 820 ms[0m[0m
+[0m[[0minfo[0m] [0m[34m3 examples, 2 failures, 0 error[0m[0m
+[0m[[0minfo[0m] [0m[0m

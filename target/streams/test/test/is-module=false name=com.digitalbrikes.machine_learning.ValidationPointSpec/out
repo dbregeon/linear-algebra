@@ -1,0 +1,16 @@
+[0m[[0minfo[0m] [0mValidationPointSpec[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0mvalidationPoint trainingError should[0m
+[0m[[0minfo[0m] [0m[32m+[0m be the training result's error[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mvalidationPoint apply method should[0m
+[0m[[0minfo[0m] [0m[32m+[0m be the application of the trainingResult[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mvalidationPoint comparison should[0m
+[0m[[0minfo[0m] [0m[32m+[0m be done on error[0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0m [0m
+[0m[[0minfo[0m] [0mTotal for specification ValidationPointSpec[0m
+[0m[[0minfo[0m] [0m[34mFinished in 52 ms[0m[0m
+[0m[[0minfo[0m] [0m[34m3 examples, 0 failure, 0 error[0m[0m
+[0m[[0minfo[0m] [0m[0m

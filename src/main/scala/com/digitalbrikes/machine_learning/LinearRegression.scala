@@ -5,30 +5,41 @@ import com.digitalbrikes.linear_algebra.Vector._
 import com.digitalbrikes.linear_algebra.Matrix
 import com.digitalbrikes.linear_algebra.Matrix._
 
-class LinearRegression(val minimize : GradientDescent) extends BaseRegression(minimize) {
+final class LinearRegression(minimize : GradientDescent) extends BaseRegression(minimize) {
 	
 	protected
 	
-	def cost[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], theta : Vector[N], lambda : BigDecimal) : BigDecimal = {
+	/**
+	 * The cost in a linear regression is based off a simple difference.
+	 */
+	def cost[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], lambda : BigDecimal) : Vector[N] => BigDecimal =
+		LinearCostFunction(X, y, lambda)
+	
+	/**
+	 * This is the derived function of the cost.
+	 */
+	def gradient[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], lambda : BigDecimal) :Vector[N] => Vector[N] =
+		LinearGradientFunction(X, y, lambda)
+}
+
+private object LinearCostFunction {
+  def apply[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], lambda : BigDecimal) : Vector[N] => BigDecimal =
+	theta => {
 		val scale = 2 * X.rowCount
 		val difference = X * theta - y
-		(difference.norm()(0, 0) + lambda * biasless(theta).norm()(0,0)) / scale
+		(difference.norm()(0, 0) + lambda * Biasless(theta).norm()(0,0)) / scale
 	}
-	
-	def gradient[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], theta : Vector[N], lambda : BigDecimal) :Vector[N] = {
-		val scale = X.rowCount
-		val difference = X * theta - y
-		(X.transpose() * difference + lambda *: biasless(theta)) / scale
-	}
+}
 
-	private
-	
-	def biasless[M  <: Nat, N  <: Nat](X : Matrix[M,N]) : Matrix[M,N] =
-		new Matrix[M, N](X.rows, X.columns, Array.tabulate(X.values.length) (index => {
-			if (index < X.columns) {
-				0
-			} else {
-				X.values(index)
-			}
-		}))
+private object LinearGradientFunction {
+  def apply[M  <: Nat, N  <: Nat](X : Matrix[M,N], y : Vector[M], lambda : BigDecimal) :Vector[N] => Vector[N] =
+		theta =>{
+			val scale = X.rowCount
+			val difference = X * theta - y
+			(X.transpose() * difference + lambda *: Biasless(theta)) / scale
+		}
+}
+
+object LinearRegression {
+  def apply(minimize : GradientDescent) : LinearRegression = new LinearRegression(minimize)
 }
