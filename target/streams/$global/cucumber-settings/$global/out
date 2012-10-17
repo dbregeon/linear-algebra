@@ -1,0 +1,14 @@
+[0m[[0mdebug[0m] [0m-classpath /Users/dbregeon/Development/scala/linear-algebra/target/scala-2.9.2/test-classes:/Users/dbregeon/Development/scala/linear-algebra/target/scala-2.9.2/classes:/Users/dbregeon/.sbt/boot/scala-2.9.2/lib/scala-library.jar:/Users/dbregeon/.ivy2/cache/junit/junit/jars/junit-4.8.jar:/Users/dbregeon/.ivy2/cache/org.scalacheck/scalacheck_2.9.2/jars/scalacheck_2.9.2-1.10.0.jar:/Users/dbregeon/.ivy2/cache/org.scala-tools.testing/test-interface/jars/test-interface-0.5.jar:/Users/dbregeon/.ivy2/cache/org.specs2/specs2_2.9.2/jars/specs2_2.9.2-1.12.1.jar:/Users/dbregeon/.ivy2/cache/org.specs2/specs2-scalaz-core_2.9.2/jars/specs2-scalaz-core_2.9.2-6.0.1.jar:/Users/dbregeon/.ivy2/cache/org.scalatest/scalatest_2.9.2/jars/scalatest_2.9.2-1.8.jar:/Users/dbregeon/.ivy2/cache/info.cukes/cucumber-scala/jars/cucumber-scala-1.0.9.jar:/Users/dbregeon/.ivy2/cache/info.cukes/cucumber-core/jars/cucumber-core-1.0.9.jar:/Users/dbregeon/.ivy2/cache/info.cukes/gherkin/bundles/gherkin-2.11.0.jar:/Users/dbregeon/.ivy2/cache/info.cukes/cucumber-html/jars/cucumber-html-0.2.1.jar:/Users/dbregeon/.ivy2/cache/info.cukes/cucumber-junit/jars/cucumber-junit-1.0.9.jar -Xmx256M -XX:MaxPermSize=64M cucumber.cli.Main --glue  --format pretty /Users/dbregeon/Development/scala/linear-algebra/src/test/features[0m
+[0m[[0minfo[0m] [0mFeature: Linear Regression[0m
+[0m[[0minfo[0m] [0m  In order to learn the characteristics of a linear model[0m
+[0m[[0minfo[0m] [0m  As an engineer[0m
+[0m[[0minfo[0m] [0m  I want to be able to run a linear regression on a data set[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m  Scenario: Execute Linear Regression on the simple housing data [90m# linear_regression.feature:6[0m[0m
+[0m[[0minfo[0m] [0m    [90mGiven [0m[90mthe simple housing data[0m                                [90m# MachineLearningData.scala:18[0m[0m
+[0m[[0minfo[0m] [0m[1A    [32mGiven [0m[32mthe simple housing data[0m                                [90m# MachineLearningData.scala:18[0m[0m
+[0m[[0minfo[0m] [0m    [90mWhen [0m[90mI apply the linear regression[0m                           [90m# LinearRegression.scala:18[0m[0m
+[0m[[0minfo[0m] [0m[1A    [32mWhen [0m[32mI apply the linear regression[0m                           [90m# LinearRegression.scala:18[0m[0m
+[0m[[0minfo[0m] [0m    [90mThen [0m[90mI should get the right result[0m                           [90m# LinearRegression.scala:23[0m[0m
+[0m[[0minfo[0m] [0m[1A    [32mThen [0m[32mI should get the right result[0m                           [90m# LinearRegression.scala:23[0m[0m
+[0m[[0minfo[0m] [0m[0m

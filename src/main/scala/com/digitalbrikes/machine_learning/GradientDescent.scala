@@ -23,6 +23,6 @@ private object MinimizationResult {
 	def apply[N  <: Nat](minimum : Vector[N], path : Seq[Vector[N]]) : MinimizationResult[N] = new MinimizationResult(minimum, path)
 }
 
-private object GradientDescent {
+object GradientDescent {
 	def apply(alpha : BigDecimal, iterations : Int) : GradientDescent = new GradientDescent(alpha, iterations)
 }

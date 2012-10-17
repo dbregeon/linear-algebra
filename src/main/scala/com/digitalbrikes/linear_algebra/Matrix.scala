@@ -1,6 +1,7 @@
 package com.digitalbrikes.linear_algebra
 
 import Nat._
+import scala.io.Source
 
 class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns, private val values : Array[BigDecimal]) extends Serializable {
 	def rowCount : Int = rows.rank
@@ -43,7 +44,7 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 		
 		(0 to rowCount -1).foreach(currentRow => subValues(currentRow)= values(currentRow*columnCount + column))
 		
-		new Matrix(rows, one, subValues) 
+		Vector(rows, subValues) 
 	}
 	
 	def transpose() : Matrix[Columns, Rows] = new Matrix[Columns, Rows](columns, rows, Array.tabulate(values.length) (index => (values((index % rows) * columns + index / rows))))
@@ -71,7 +72,7 @@ object Matrix {
 		new Matrix[Rows, Columns](rows, columns, values)
 	}
 	
-	def apply(file : String) : Matrix[Nat, Nat] = buildFromTuple(loadData(file))
+	def apply(source : Source) : Matrix[Nat, Nat] = buildFromTuple(loadData(source))
 	
 	def ones[Rows <: Nat, Columns <: Nat](tuple : (Rows,Columns)) : Matrix[Rows, Columns] = {
 		val (rows, columns) = tuple
@@ -90,12 +91,10 @@ object Matrix {
 		apply(rows, columns, values)
 	}
 	
-	def loadData(file : String) : (Nat, Nat, Array[BigDecimal]) = {
-		val data = scala.io.Source.fromFile(file)
-		val lines = data.getLines.toIterable
+	def loadData(source : Source) : (Nat, Nat, Array[BigDecimal]) = {
+		val lines = source.getLines.toIterable
 		val rows = lines.size
 		val values = lines.flatMap((line) => line.split(",")).map((s) => BigDecimal(s)).toArray
-		data.close()
 		(Nat(rows), Nat(values.size / rows), values)
 	}
 

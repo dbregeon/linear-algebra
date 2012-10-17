@@ -16,7 +16,12 @@ libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
 
 libraryDependencies += "org.specs2" %% "specs2" % "1.12.1" % "test"
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "1.8" % "test"
+
 scalacOptions += "-deprecation"
 
 scalacOptions += "-unchecked"
 
+cucumberStepsBasePackage := "steps"
+
+seq(cucumberSettings : _*)
