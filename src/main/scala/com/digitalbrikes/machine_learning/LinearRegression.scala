@@ -27,7 +27,8 @@ private object LinearCostFunction {
 	theta => {
 		val scale = 2 * X.rowCount
 		val difference = X * theta - y
-		(difference.norm()(0, 0) + lambda * Biasless(theta).norm()(0,0)) / scale
+		val biasless = Biasless(theta)
+		(difference.transpose * difference + lambda * (biasless.transpose * biasless)) / scale
 	}
 }
 

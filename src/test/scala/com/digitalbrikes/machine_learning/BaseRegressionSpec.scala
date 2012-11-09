@@ -13,7 +13,7 @@ final class TestRegression(minimize: GradientDescent) extends BaseRegression(min
     theta => {
       val scale = 2 * X.rowCount
       val difference = X * theta - y
-      (difference.norm()(0, 0) + lambda * theta.norm()(0, 0)) / scale
+      (difference.transpose * difference + lambda * (theta.transpose * theta)) / scale
     }
 
   def gradient[M <: Nat, N <: Nat](X: Matrix[M, N], y: Vector[M], lambda: BigDecimal): Vector[N] => Vector[N] =

@@ -20,21 +20,22 @@ object MachineLearningDataSteps extends ScalaDsl with EN with ShouldMatchers {
 	  matrices = Some(new Matrices(source))
   }
   
-  
+  Given("""^the complex housing data$""") {
+	  val source = scala.io.Source.fromURL(getClass().getClassLoader().getResource("ex1data2.txt"))
+	  matrices = Some(new Matrices(source))
+  }
 }
 
 class Matrices(source : Source) {
   def values = {
 	  val data = loadData(source)
 	  source.close()
-	  (appendToZeros(data.column(0)), data.column(1))
+	  (appendToOnes(data.columns(0 to data.columns - 2)), data.column(data.columns - 1))
   } 
   
-  def appendToZeros[M <: Nat, N <: Nat](matrix : Matrix[M,N]) : Matrix[M, Succ[N]] = {
+  def appendToOnes[M <: Nat, N <: Nat](matrix : Matrix[M,N]) : Matrix[M, Succ[N]] = {
     val columns = matrix.columns + 1
-    matrix.columns.successor match {
-      case c : Succ[N] => Matrix(matrix.rows, c, Array.tabulate(matrix.rows.rank * columns) (index => if (0 == index % columns) 1 else matrix(index / columns, (index - index % columns) % matrix.columns)))
-    }
+    Matrix(matrix.rows, successor(matrix.columns), Array.tabulate(matrix.rows.rank * columns) (index => if (0 == index % columns) 1 else matrix(index / columns, (index - index % columns) % matrix.columns)))
   }
   
   def loadData[M <: Nat, N <: Nat](source : Source) = Matrix(source)

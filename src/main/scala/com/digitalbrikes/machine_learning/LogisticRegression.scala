@@ -28,7 +28,8 @@ private object LogisticCostFunction {
 		theta => {
 		val scale = X.rowCount
 		val sigmoidValue = sigmoid(X * theta)
-		val regularization = lambda * Biasless(theta).norm()(0,0) / (2 * scale)
+		val biasless =  Biasless(theta)
+		val regularization = lambda * (biasless.transpose * biasless) / (2 * scale)
 		val positive = y.transpose * log(sigmoidValue)
 		val negative = (ones(y.size) - y).transpose() * log(ones(sigmoidValue.size) - sigmoidValue)
 		(positive + negative)(0, 0) / (-1 * scale) + regularization

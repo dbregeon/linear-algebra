@@ -17,10 +17,14 @@ object LinearRegressionsteps extends ScalaDsl with EN with ShouldMatchers {
     
   When("""^I apply the linear regression$""") {
       val matrices = MachineLearningDataSteps.matrices.get.values
-	  trainingResult = Some(LinearRegression(GradientDescent(0.01, 1500)).train(matrices._1, matrices._2, 1.))
+	  trainingResult = Some(LinearRegression(GradientDescent(0.01, 10000)).train(matrices._1, matrices._2, 1.))
   }
   
-  Then("""^I should get the right result$""") {
-    trainingResult.get.theta should be(Vector(Nat(2), Array[BigDecimal](BigDecimal("-3.624388024110172944999343734225919"), BigDecimal("1.165623148698249480858753278741790"))))
+  Then("""^I should get the right theta for the simple housing data result$""") {
+    trainingResult.get.theta should be(Vector(Nat(2), Array[BigDecimal](BigDecimal("-3.889014334580242475827532682811039"), BigDecimal("1.192204391831954466856300264880725"))))
+  }
+  
+  Then("""^I should get the right theta for the complex housing data result$""") {
+    trainingResult.get.theta should be(Vector(Nat(3), Array[BigDecimal](BigDecimal("340412.659574"), BigDecimal("110631.050279"), BigDecimal("-6649.474271"))))
   }
 }

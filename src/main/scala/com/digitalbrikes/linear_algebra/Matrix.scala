@@ -22,18 +22,27 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 		new Matrix[Rows, OtherColumns](rows, m.columns, multiplicationValues)
 	}
 
-	def norm() : Matrix[Columns,Columns] = {
-		transpose * this
-	}
+	def norm() : BigDecimal = sqrt(fold(0)((accu, value) => accu + value * value))
 	
 	def map(function : (BigDecimal => BigDecimal)) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => function(values(index))))
+	
+	def mapByRow(function : (Int, BigDecimal) => BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => function(index % columnCount, values(index))))
+	
+	def mapByColumn(function : (Int, BigDecimal) => BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => function(index / columnCount, values(index))))
+	
+	def foldByColumn(z : BigDecimal)(function : (BigDecimal, BigDecimal) => BigDecimal) : Matrix[Succ[Zero], Columns] =
+	  new Matrix[Succ[Zero], Columns](one, columns, Array.tabulate(columnCount)(index => (0 to rowCount -1).foldLeft(z)((accu, count) => function(accu, apply(count, index)))))
+	  
+	def fold(z : BigDecimal)(function : (BigDecimal, BigDecimal) => BigDecimal) : BigDecimal = values.fold(z)(function)
+	  
+	def foreach(function : (Int, Int, BigDecimal) => BigDecimal) : Matrix[Rows, Columns] = new Matrix[Rows, Columns](rows, columns, Array.tabulate(values.length) (index => function(index / columnCount, index % columnCount, values(index)))) 
 	
 	def columns(range : IndexedSeq[Int]) : Matrix[Rows, Nat] = {
 		val subValues = new Array[BigDecimal](range.size * rowCount)
 		val subColumns = Nat(range.size)
 		(0 to rowCount -1).foreach(currentRow => {
 			range.foreach(column => {
-				subValues(currentRow * subColumns)= values(currentRow*columnCount + column)
+				subValues(currentRow * subColumns + column)= values(currentRow*columnCount + column)
 			})
 		})
 		new Matrix(rows, subColumns, subValues)
@@ -47,6 +56,30 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 		Vector(rows, subValues) 
 	}
 	
+	def rows(range : IndexedSeq[Int]) : Matrix[Nat, Columns] = {
+		val subValues = new Array[BigDecimal](columnCount * range.size)
+		val subRows = Nat(range.size)
+		range.foreach(currentRow => {
+			(0 until columnCount).foreach(column => {
+				subValues((currentRow - range.head) * columnCount + column)= values(currentRow*columnCount + column)
+			})
+		})
+		new Matrix(subRows, columns, subValues)
+	}
+	
+	def row(row : Int) : Matrix[Succ[Zero], Columns] = {
+		val subValues = new Array[BigDecimal](columnCount)
+		
+		(0 to columnCount -1).foreach(currentColumn => subValues(currentColumn)= values(columnCount*row + currentColumn))
+		
+		Matrix(one, columns, subValues) 
+	}
+	
+	def normalize : (Matrix[Rows, Columns], Matrix[Succ[Zero], Columns]) = {
+	  val columnMeans = mean(this) 
+	  (this - (Matrix.ones(rows, one) * columnMeans), columnMeans)
+	}
+	
 	def transpose() : Matrix[Columns, Rows] = new Matrix[Columns, Rows](columns, rows, Array.tabulate(values.length) (index => (values((index % rows) * columns + index / rows))))
 	
 	def apply(row : Int, column : Int) : BigDecimal = values(row*columnCount + column)
@@ -55,7 +88,7 @@ class Matrix[Rows <: Nat, Columns <: Nat](val rows : Rows, val columns : Columns
 		case that : Matrix[_,_] => rowCount == that.rowCount && columnCount == that.columnCount && valuesEquals(that.values)
 		case _             		=> false
 	}
-	
+		
 	override def toString(): String =
 		(0 to rowCount -1).foldLeft("\n")((accu : String, rowCounter : Int) =>
 			(0 to columnCount -1).foldLeft(accu + "\t")((innerAccu : String, columnCounter : Int) =>
@@ -84,6 +117,10 @@ object Matrix {
 		apply(rows, columns, Array.tabulate(rows.rank * columns.rank) (index => 0))
 	}
 	
+	def identity[Dimension <: Nat](dimension : Dimension) : Matrix[Dimension, Dimension] = {
+	  apply(dimension, dimension, Array.tabulate(dimension.rank * dimension.rank) (index => if (index % dimension.rank == index / dimension.rank) 1 else 0))
+	}
+	
 	private
 	
 	def buildFromTuple[Rows <: Nat, Columns <: Nat](tuple : (Rows, Columns, Array[BigDecimal])) : Matrix[Rows, Columns] = {
@@ -100,6 +137,7 @@ object Matrix {
 
 	implicit def doubleToMatrix(value : Double) : Matrix[Succ[Zero], Succ[Zero]] = Matrix(one, one, Array.tabulate(1) ((index) => value))	
 	implicit def intToMatrix(value : Int) : Matrix[Succ[Zero], Succ[Zero]] = Matrix(one, one, Array.tabulate(1) ((index) => value))
+	implicit def matrixToBigDecimal(M : Matrix[Succ[Zero], Succ[Zero]]) : BigDecimal = M(0,0)
 }
 
 object Vector {

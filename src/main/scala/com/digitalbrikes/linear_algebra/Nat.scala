@@ -1,23 +1,17 @@
 package com.digitalbrikes.linear_algebra
 
 object Nat {
-  abstract class Nat(val rank :Int) {
-	def successor : Nat
-  }
-  
-  class Zero extends Nat(0) {
-    def successor = new Succ[Zero](0)
-  }
-  
-  class Succ[T <: Nat](r : Int) extends Nat(r + 1) {
-    def successor = new Succ[Succ[T]](rank)
-  }
+  sealed class Nat(val rank :Int)
+  case class Zero() extends Nat(0)
+  case class Succ[T <: Nat](r : Int) extends Nat(r + 1)
   
   def zero : Zero = new Zero()
-  def one : Succ[Zero] = zero.successor
+  def one : Succ[Zero] = successor(zero)
+  
+  def successor[T <: Nat](nat : T) = new Succ[T](nat.rank)
   
   implicit def natToInt(nat : Nat) : Int = nat.rank
    
   def apply(number:Int) : Nat =
-    (0 to number - 1).foldLeft[Nat](zero)((accu : Nat, _ : Int) => accu.successor)
+    (0 to number - 1).foldLeft[Nat](zero)((accu : Nat, _ : Int) => successor(accu))
 }

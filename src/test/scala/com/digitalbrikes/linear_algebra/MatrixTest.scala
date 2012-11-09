@@ -23,38 +23,46 @@ object MatrixSpecification extends Properties("Matrix") {
 		  m <- Gen.choose(1, 100)
 		  values1 <- Gen.containerOfN[Array, BigDecimal](n * m, unlimitedBigDecimalGen)
 	} yield (Matrix(Nat(n), Nat(m), values1))
-	
-	def addMatrices[M <: Nat, N <: Nat](tuple: (Matrix[M, N], Matrix[M, N])) = {
+
+	property("addition is commutative") = forAll(sameDimensionMatrixGenerator) {tuple  => 
 		val (a, b) =  tuple
 		(a + b) == (b + a)
 	}
 	
-	def subtractMatrices[M <: Nat, N <: Nat](tuple: (Matrix[M, N], Matrix[M, N])) = {
-		val (a, b) =  tuple
+	property("subtraction is the inverse of the addition") = forAll(sameDimensionMatrixGenerator)  {tuple =>
+	  	val (a, b) =  tuple
 		b == (a + b - a)
 	}
-
-	property("addition is commutative") = forAll(sameDimensionMatrixGenerator) {tuple  => 
-		addMatrices(tuple)
-	}
 	
-	property("subtraction is the inverse of the addition") = forAll(sameDimensionMatrixGenerator)  {tuple =>
-	  	subtractMatrices(tuple)
-	}
-	
-	property("scalar multiplication is associative") = forAll(matrixGenerator, unlimitedBigDecimalGen, unlimitedBigDecimalGen) {(m : Matrix[_, _], s1 : BigDecimal, s2 : BigDecimal) => 
+	property("scalar multiplication is associative") = forAll(matrixGenerator, unlimitedBigDecimalGen, unlimitedBigDecimalGen) {(m : Matrix[_ <: Nat, _ <: Nat], s1 : BigDecimal, s2 : BigDecimal) => 
 		((s1 * s2) *: m) == (s1 *: (s2 *: m))
 	}
 	
-	property("scalar multiplication is associative") = forAll(matrixGenerator, unlimitedBigDecimalGen, unlimitedBigDecimalGen) {(m : Matrix[_, _], s1 : BigDecimal, s2 : BigDecimal) => 
+	property("scalar multiplication is associative") = forAll(matrixGenerator, unlimitedBigDecimalGen, unlimitedBigDecimalGen) {(m : Matrix[_ <: Nat, _ <: Nat], s1 : BigDecimal, s2 : BigDecimal) => 
 		((s1 * s2) *: m) == (s1 *: (s2 *: m))
 	}
 	
-	property("one is the neutral element of the scalar multiplication") = forAll(matrixGenerator) {(m : Matrix[_, _]) => 
+	property("one is the neutral element of the scalar multiplication") = forAll(matrixGenerator) {(m : Matrix[_ <: Nat, _ <: Nat]) => 
 		(1 *: m) == m
 	}
 	
-	property("transpose of transpose is the same matrix") = forAll(matrixGenerator) {(m : Matrix[_, _]) => 
+	property("transpose of transpose is the same matrix") = forAll(matrixGenerator) {(m : Matrix[_ <: Nat, _ <: Nat]) => 
 		(m.transpose).transpose == m
+	}
+	
+	property("map of identity is the same matrix") = forAll(matrixGenerator) {(m : Matrix[_ <: Nat, _ <: Nat]) => 
+		(m.map(value => value)) == m
+	}
+	
+	property("map by row of identity is the same matrix") = forAll(matrixGenerator) {(m : Matrix[_ <: Nat, _ <: Nat]) => 
+		(m.mapByRow((columnIndex, value) => value)) == m
+	}
+	
+	property("map by row and map are identical when map by row is not using the columnIndex") = forAll(matrixGenerator) {(m : Matrix[_ <: Nat, _ <: Nat]) => 
+		(m.mapByRow((columnIndex, value) => value + 1)) == (m.map(value => value + 1))
+	}
+	
+	property("map by column and map are identical when map by row is not using the rowIndex") = forAll(matrixGenerator) {(m : Matrix[_ <: Nat, _ <: Nat]) => 
+		(m.mapByRow((rowIndex, value) => value + 1)) == (m.map(value => value + 1))
 	}
 }
