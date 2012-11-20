@@ -24,4 +24,6 @@ scalacOptions += "-unchecked"
 
 cucumberStepsBasePackage := "steps"
 
+//testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-v", "10")
+
 seq(cucumberSettings : _*)

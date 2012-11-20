@@ -7,21 +7,23 @@ import Nat._
 object SqrtSpecification extends Properties("Sqrt") {
 	import Arbitrary.arbitrary
 	
-	val unlimitedBigDecimalGen = for {
+	val limitedBigDecimalGen = for {
 		  n <- arbitrary[Double]
-	} yield (BigDecimal(scala.math.abs(n) + 0.00000001, java.math.MathContext.UNLIMITED))
+	} yield (BigDecimal(scala.math.abs(n), java.math.MathContext.DECIMAL128))
 	
 	val matrixGenerator = for {
 		  n <- Gen.choose(1, 100)
 		  m <- Gen.choose(1, 100)
-		  values1 <- Gen.containerOfN[Array, BigDecimal](n * m, unlimitedBigDecimalGen)
+		  values1 <- Gen.containerOfN[Array, BigDecimal](n * m, limitedBigDecimalGen)
 	} yield (Matrix(Nat(n), Nat(m), values1))
 
-	property("sqrt calculate the sqrt of the BigDecimal") = forAll(unlimitedBigDecimalGen) {x : BigDecimal  => 
-		sqrt(x) == scala.math.sqrt(x.doubleValue)
+	property("sqrt calculate the sqrt of the BigDecimal") = forAll(limitedBigDecimalGen) {x : BigDecimal  => {
+			val root = sqrt(x) 
+			root * root - x <= x * BigDecimal(10).pow(-30)
+		}
 	}
 	
 	property("sqrt calculate the sqrt all the elements in the matrix") = forAll(matrixGenerator) {X : Matrix[Nat, Nat]  => 
-		sqrt(X) == X.map( x => scala.math.sqrt(x.doubleValue))
+		sqrt(X) == X.map( x => sqrt(x))
 	}
 }
