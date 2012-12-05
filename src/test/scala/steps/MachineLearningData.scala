@@ -1,16 +1,19 @@
 package steps
 
-import cucumber.runtime.{EN, ScalaDsl}
-import org.scalatest.matchers.ShouldMatchers
-import com.digitalbrikes.linear_algebra.Matrix
-import com.digitalbrikes.linear_algebra.Matrix._
-import com.digitalbrikes.linear_algebra.Nat
-import com.digitalbrikes.linear_algebra.Nat._
-import scala.runtime.Nothing$
-import java.net.URL
+import scala.collection.immutable.{Vector => _Vector}
 import scala.io.Source
-import com.digitalbrikes.linear_algebra.Vector
-import com.digitalbrikes.linear_algebra.Vector._
+import scala.math.BigDecimal.int2bigDecimal
+
+import org.scalatest.matchers.ShouldMatchers
+
+import com.digitalbrikes.linear_algebra.Matrix
+import com.digitalbrikes.linear_algebra.Nat.Nat
+import com.digitalbrikes.linear_algebra.Nat.Succ
+import com.digitalbrikes.linear_algebra.Nat.natToInt
+import com.digitalbrikes.linear_algebra.Nat.successor
+
+import cucumber.runtime.EN
+import cucumber.runtime.ScalaDsl
   
 object MachineLearningDataSteps extends ScalaDsl with EN with ShouldMatchers {
   var matrices : Option[Matrices] = None
@@ -35,7 +38,7 @@ class Matrices(source : Source) {
   
   def appendToOnes[M <: Nat, N <: Nat](matrix : Matrix[M,N]) : Matrix[M, Succ[N]] = {
     val columns = matrix.columns + 1
-    Matrix(matrix.rows, successor(matrix.columns), Array.tabulate(matrix.rows.rank * columns) (index => if (0 == index % columns) 1 else matrix(index / columns, (index - index % columns) % matrix.columns)))
+    Matrix(matrix.rows, successor(matrix.columns), _Vector.tabulate(matrix.rows.rank * columns) (index => if (0 == index % columns) 1 else matrix(index / columns, (index - index % columns) % matrix.columns)))
   }
   
   def loadData[M <: Nat, N <: Nat](source : Source) = Matrix(source)

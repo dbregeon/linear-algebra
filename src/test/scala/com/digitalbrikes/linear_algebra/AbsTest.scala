@@ -1,12 +1,17 @@
 package com.digitalbrikes.linear_algebra
 
-import org.scalacheck._
-import org.scalacheck.Prop._
-import Nat._
+import scala.math.BigDecimal.double2bigDecimal
+import scala.math.BigDecimal.int2bigDecimal
+
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
+import org.scalacheck.Prop.forAll
+import org.scalacheck.Prop.propBoolean
+import org.scalacheck.Properties
+
+import Nat.Nat
 
 object AbsSpecification extends Properties("Abs") {
-	import Arbitrary.arbitrary
-	
 	val unlimitedBigDecimalGen = for {
 		  n <- arbitrary[Double]
 	} yield (BigDecimal(scala.math.abs(n) + 0.00000001, java.math.MathContext.UNLIMITED))
@@ -14,7 +19,7 @@ object AbsSpecification extends Properties("Abs") {
 	val matrixGenerator = for {
 		  n <- Gen.choose(1, 100)
 		  m <- Gen.choose(1, 100)
-		  values1 <- Gen.containerOfN[Array, BigDecimal](n * m, unlimitedBigDecimalGen)
+		  values1 <- Gen.listOfN[BigDecimal](n * m, unlimitedBigDecimalGen)
 	} yield (Matrix(Nat(n), Nat(m), values1))
 
 	property("abs calculate the abs of the BigDecimal") = forAll(unlimitedBigDecimalGen) {x : BigDecimal  => 

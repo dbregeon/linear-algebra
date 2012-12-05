@@ -5,6 +5,8 @@ import com.digitalbrikes.linear_algebra.Vector._
 import com.digitalbrikes.linear_algebra.Matrix
 import com.digitalbrikes.linear_algebra.Matrix._
 
+import scala.collection.immutable.{Vector => _Vector}
+
 /**
  * This is the base class of a regression algorithm. It enables to iterate through a gradient algorithm using
  * characteristic cost function.
@@ -51,5 +53,5 @@ abstract class BaseRegression(minimize : GradientDescent) {
  */
 object Biasless {
   def apply[M  <: Nat, N  <: Nat](X : Matrix[M,N]) : Matrix[M,N] =
-		new Matrix[M, N](X.rows, X.columns, Array.tabulate(X.rows * X.columns) (index => if (index < X.columns) 0 else X(index / X.columns, index % X.columns)))
+		new Matrix[M, N](X.rows, X.columns, _Vector.tabulate(X.rows * X.columns) (index => if (index < X.columns) 0 else X(index / X.columns, index % X.columns)))
 }

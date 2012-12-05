@@ -1,19 +1,25 @@
 package com.digitalbrikes.machine_learning
 
-import org.specs2.mutable._
-import com.digitalbrikes.linear_algebra.Nat
-import com.digitalbrikes.linear_algebra.Nat._
-import com.digitalbrikes.linear_algebra.Vector
-import com.digitalbrikes.linear_algebra.Vector._
-import com.digitalbrikes.linear_algebra.Matrix._
+import scala.collection.immutable.{Vector => _Vector}
+import scala.math.BigDecimal.double2bigDecimal
+import scala.math.BigDecimal.int2bigDecimal
 import scala.util.Random
+
+import org.specs2.mutable.Specification
+
+import com.digitalbrikes.linear_algebra.Matrix.ones
+import com.digitalbrikes.linear_algebra.Nat
+import com.digitalbrikes.linear_algebra.Nat.Nat
+import com.digitalbrikes.linear_algebra.Nat.one
+import com.digitalbrikes.linear_algebra.Vector
+import com.digitalbrikes.linear_algebra.Vector.Vector
 
 final class ValidationPointSpec extends Specification {
 	def errorFor[N <: Nat](theta : Vector[N], value : BigDecimal) : Vector[N] => BigDecimal = v1 => if (v1 == theta) value else 0
 	def emptySequenceFor[N <: Nat](vector : Vector[N]) : Seq[Vector[N]] = Seq.empty
 	
 	val n = Nat(3)
-	val minimum = Vector(n, Array[BigDecimal](0.9, 0.9, 0.9))
+	val minimum = Vector(n, _Vector[BigDecimal](0.9, 0.9, 0.9))
 	val trainingResult = TrainingResult(errorFor(minimum, Random.nextDouble), MinimizationResult(minimum, emptySequenceFor(minimum)))
   
 	"validationPoint trainingError" should {
@@ -47,7 +53,7 @@ final class ValidationResultSpec extends Specification {
   def emptySequenceFor[N <: Nat](validationPoint : ValidationPoint[N]) : Seq[ValidationPoint[N]] = Seq.empty
   
   val n = Nat(3)
-  val minimumTheta = Vector(n, Array[BigDecimal](0.9, 0.9, 0.9))
+  val minimumTheta = Vector(n, _Vector[BigDecimal](0.9, 0.9, 0.9))
   val trainingResult = TrainingResult(errorFor(minimumTheta, Random.nextDouble), MinimizationResult(minimumTheta, emptySequenceFor(minimumTheta)))
   val minimum = ValidationPoint(Random.nextDouble, trainingResult, Random.nextDouble)
   

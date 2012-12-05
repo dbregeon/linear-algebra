@@ -1,12 +1,18 @@
 package com.digitalbrikes.machine_learning
 
-import org.specs2.mutable._
-import com.digitalbrikes.linear_algebra.Nat
-import com.digitalbrikes.linear_algebra.Nat._
-import com.digitalbrikes.linear_algebra.Vector
-import com.digitalbrikes.linear_algebra.Vector._
-import com.digitalbrikes.linear_algebra.Matrix._
+import scala.collection.immutable.{Vector => _Vector}
+import scala.math.BigDecimal.double2bigDecimal
+import scala.math.BigDecimal.int2bigDecimal
 import scala.util.Random
+
+import org.specs2.mutable.Specification
+
+import com.digitalbrikes.linear_algebra.Matrix.ones
+import com.digitalbrikes.linear_algebra.Nat
+import com.digitalbrikes.linear_algebra.Nat.Nat
+import com.digitalbrikes.linear_algebra.Nat.one
+import com.digitalbrikes.linear_algebra.Vector
+import com.digitalbrikes.linear_algebra.Vector.Vector
 
 class TrainingResultSpec extends Specification {
   def dummyErrorFor[N <: Nat](theta : Vector[N]) : Vector[N] => BigDecimal = errorFor(theta, 0)
@@ -17,7 +23,7 @@ class TrainingResultSpec extends Specification {
   "trainingResult theta" should {
     "return the minimization result's minimum" in {
       val n = Nat(3)
-	  val minimum = Vector(n, Array[BigDecimal](0.9, 0.9, 0.9))
+	  val minimum = Vector(n, _Vector[BigDecimal](0.9, 0.9, 0.9))
 	  
 	  TrainingResult(dummyErrorFor(minimum), MinimizationResult(minimum, emptySequenceFor(minimum))).theta must be_==(minimum) 
     }
@@ -26,7 +32,7 @@ class TrainingResultSpec extends Specification {
   "trainingResult error" should {
     "return the error of the minimization result's minimum" in {
       val n = Nat(3)
-	  val minimum = Vector(n, Array[BigDecimal](0.9, 0.9, 0.9))
+	  val minimum = Vector(n, _Vector[BigDecimal](0.9, 0.9, 0.9))
 	  val expectedError = Random.nextDouble
 	  
 	  TrainingResult(errorFor(minimum, expectedError), MinimizationResult(minimum, emptySequenceFor(minimum))).error must be_==(expectedError)
@@ -36,7 +42,7 @@ class TrainingResultSpec extends Specification {
   "trainingResult predict" should {
     "return the result of the prediction for the minimization result's minimum" in {
       val n = Nat(3)
-	  val minimum = Vector(n, Array[BigDecimal](0.9, 0.9, 0.9))
+	  val minimum = Vector(n, _Vector[BigDecimal](0.9, 0.9, 0.9))
 	  val point = ones(n, one)
 	  val expectedPrediction = (point.transpose() * minimum)(0, 0)
 	  
