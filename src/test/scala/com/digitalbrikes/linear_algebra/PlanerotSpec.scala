@@ -22,7 +22,7 @@ class PlanerotSpec extends Specification {
 		"compute the givens plane rotation for 4.795628519951503E+307, 2.807032599346196E+307" in {
 		    val x = Vector(Nat(2), _Vector(BigDecimal("4.795628519951503E+307"), BigDecimal("2.807032599346196E+307")))
 			val (c, s, r) = planerot(BigDecimal("4.795628519951503E+307"), BigDecimal("2.807032599346196E+307"))
-			val J = Matrix(Nat(2), Nat(2), _Vector(c, -s, s, c))
+			val J = Matrix(Nat(2), Nat(2), _Vector(c, s, -s, c))
 			val result = Vector(Nat(2), _Vector(r, 0))
 			((J * x) - result).norm must be_<=(abs(x(0, 0)).max(abs(x(0, 1))).max(r) * BigDecimal(10).pow(-30))
 		}
@@ -30,7 +30,7 @@ class PlanerotSpec extends Specification {
 		"compute the givens plane rotation for -1.0, -8.988465674311579E+307" in {
 		    val x = Vector(Nat(2), _Vector(BigDecimal("-1.0"), BigDecimal("-8.988465674311579E+307")))
 			val (c, s, r) = planerot(BigDecimal("-1.0"), BigDecimal("-8.988465674311579E+307"))
-			val J = Matrix(Nat(2), Nat(2), _Vector(c, -s, s, c))
+			val J = Matrix(Nat(2), Nat(2), _Vector(c, s, -s, c))
 			val result = Vector(Nat(2), _Vector(r, 0))
 			((J * x) - result).norm must be_<=(abs(x(0, 0)).max(abs(x(0, 1))).max(r) * BigDecimal(10).pow(-30))
 		}

@@ -1,76 +1,55 @@
 package com.digitalbrikes.linear_algebra
 
-import com.digitalbrikes.linear_algebra.Nat._
-import com.digitalbrikes.linear_algebra.Matrix._
-import com.digitalbrikes.linear_algebra.Vector._
-import scala.collection.immutable.{Vector => _Vector}
+import scala.collection.immutable.Stream.consWrapper
+import scala.collection.immutable.{ Vector => _Vector }
+import scala.math.BigDecimal.int2bigDecimal
 
-object svd {	
-	def apply[M <: N, N <: Nat](X : Matrix[M,Succ[N]]) : Matrix[M, Succ[N]] = diagonalise(bidiagnoliase(X))
-	
-	/**
-	 * Demmel Kahan diagonalisation of a bidiagonal matrix using givens rotations.
-	 */
-	private def diagonalise[M <: N, N <: Nat](X : Matrix[M,Succ[N]]) : Matrix[M, Succ[N]] = {
-	  val initialValue = diagonalAndSuperDiagonal(X)
-	  def isGoodEnough(guess : (Vector[Succ[N]], Vector[N])) : Boolean = guess._2.norm <= guess._1.norm * BigDecimal(10).pow(-32)
-	  lazy val values : Stream[(Vector[Succ[N]], Vector[N])] = initialValue #:: (values map diagonaliseStep)
-	  val (svd, _) = values.filter(isGoodEnough(_)).head
-	  Matrix(X.rows, X.columns, _Vector.tabulate(X.columnCount * X.columnCount)(index => if (index % X.columnCount == index / X.columnCount && index < svd.rowCount) svd(0, index / X.columnCount) else 0))
-	}
-	
-	private def diagonaliseStep[N <: Nat](vectors : (Vector[Succ[N]], Vector[N])) : (Vector[Succ[N]], Vector[N]) = {
-	  val (d, e) = vectors
-	  // c_old = 1
-	  // c = 1
-	  // for i in 1.. n-1
-	  //	(c,s,r) = rot(cdi, ei)
-	  //	if (i != 1) then e(i-1) = r * s_old
-	  //	(c_old, s_old, di) = rot(c_old * r, d(i+1) * s)
-	  // h = c * d(n)
-	  // e(n-1) = h * s_old
-	  // d(n) = h * c_old
-	  
-	  (d, e)
-	}
-	
-	/**
-	 * Extracts the diagonal and super diagonal of a matrix.
-	 */
-	private def diagonalAndSuperDiagonal[M <: Nat, N <: Nat](X : Matrix[M,Succ[N]]) : (Vector[Succ[N]], Vector[N]) = {
-	  val d = Vector(X.columns, Array.tabulate(X.rowCount) (index => X(index, index)))
-	  val e = Vector(X.columns.predecessor, Array.tabulate(X.rowCount - 1) (index => X(index, index + 1)))
-	  (d, e)
-	}
-	
-	/**
-	 * Golub-Kahan bidiagonalisation.
-	 */
-	private def bidiagnoliase[M <: N, N <: Nat](X : Matrix[M,Succ[N]]) : Matrix[M, Succ[N]] = {
-	  val initialState = (X, identity(X.rows), identity(X.columns))
-	  (0 to X.columnCount).foldLeft(initialState)((matrices, columnIndex) => bidiagonaliseStep(matrices, columnIndex))._1
-	}
-	
-	/**
-	 * Computes Householder reflectors for a given column and applies them to the previous step results. 
-	 */
-	private def bidiagonaliseStep[M <: Nat, N <: Nat](matrices : (Matrix[M, N], Matrix[M, M], Matrix[N, N]), columnIndex : Int) : (Matrix[M, N], Matrix[M, M], Matrix[N, N]) = matrices match {
-	  case (b, u, v) => {
-		    val Qk = householder(b.column(columnIndex), columnIndex)
-		    val Pk = householder(b.transpose.column(columnIndex), columnIndex + 1)
-		    (Qk * b * Pk.transpose, u * Qk.transpose , Pk * v)
-		  }
-	}
-	
-//	def scale [M <: Nat, N <: Nat](X : Matrix[M,N], columnIndex : Int, scale : BigDecimal) : (Matrix[M, N], BigDecimal) = {
-//	  var squares : BigDecimal = 0
-//	  (X.foreach((row, column, value) => if (column == columnIndex && row < columnIndex) {
-//	   val scaledValue = value / scale
-//	   squares += scaledValue * scaledValue
-//	   scaledValue
-//	  } else value), squares)
-//	}
-//	
-//	def calcScale [M <: N, N <: Nat](X : Matrix[M,N], columnIndex : Int) : BigDecimal =
-//	  (columnIndex to X.rowCount).foldLeft[BigDecimal](0)((scale, rowIndex) => scale + X(rowIndex, columnIndex).abs)
+import com.digitalbrikes.linear_algebra.Nat.Nat
+import com.digitalbrikes.linear_algebra.Nat.Succ
+import com.digitalbrikes.linear_algebra.Vector.Vector
+import scala.math.min
+
+object svd {
+  def apply[M <: N, N <: Succ[Nat]](X: Matrix[M, N]): Matrix[M, N] = diagonalise(upperbidiagonal(X)._1)
+
+  /**
+   * Demmel Kahan diagonalisation of a bidiagonal matrix using givens rotations.
+   */
+  private def diagonalise[M <: N, N <: Succ[Nat]](X: Matrix[M, N]): Matrix[M, N] = {
+    val initialValue = diagonalAndSuperDiagonal(X)
+    def isGoodEnough[P <: Nat](guess: (Vector[Succ[P]], Vector[P])): Boolean = {
+      guess._2.norm <= guess._1.norm * BigDecimal(10).pow(-32)
+    }
+    def valueStream[P <: Nat](initial : (Vector[Succ[P]], Vector[P])) = {
+    	lazy val values: Stream[(Vector[Succ[Nat]], Vector[Nat])] = initialValue #:: (values map diagonaliseStep)
+    	values
+    }
+    val (svd, _) = valueStream(initialValue).filter(isGoodEnough(_)).head
+    Matrix(X.rows, X.columns, _Vector.tabulate(X.columnCount * X.rowCount)(index => if (index % X.columnCount == index / X.columnCount && index / X.columnCount < svd.rowCount) svd(index / X.columnCount, 0).abs else 0))
+  }
+
+  private def diagonaliseStep[N <: Nat](vectors: (Vector[Succ[N]], Vector[N])): (Vector[Succ[N]], Vector[N]) = {
+    val (d, e) = vectors
+    val initialState: (BigDecimal, BigDecimal, BigDecimal, _Vector[BigDecimal], _Vector[BigDecimal]) = (BigDecimal(1), BigDecimal(1), BigDecimal(0), _Vector.empty, _Vector.empty)
+    val (currentC, previousC, previousS, newD, newE) = (0 to e.rowCount - 1).foldLeft(initialState)((state, row) => {
+      val (currentC, previousC, previousS, inProgressD, inProgressE) = state
+      val (c, s, r) = planerot(currentC * d(row, 0), e(row, 0))
+      val toBeReturnedE = if (0 == row) inProgressE else inProgressE :+ (r * previousS)
+      val (toBeReturnedPreviousC, toBeReturnedPreviousS, dForRow) = planerot(previousC * r, d(row + 1, 0) * s)
+      (c, toBeReturnedPreviousC, toBeReturnedPreviousS, inProgressD :+ dForRow, toBeReturnedE)
+    })
+    val h = currentC * d(0, d.rowCount - 1)
+    (Vector(d.rows, newD :+ (h * previousC)), Vector(e.rows, newE :+ (h * previousS)))
+  }
+
+  /**
+   * Extracts the diagonal and super diagonal of a matrix.
+   */
+  private def diagonalAndSuperDiagonal[M <: N, N <: Succ[Nat]](X: Matrix[M, N]) = {
+    val superdiagonal = Nat(scala.math.min(X.columnCount, X.rowCount) - 1);
+    val diagonal = Nat.successor(superdiagonal);
+    val d = Vector(diagonal, _Vector.tabulate(diagonal.rank)(index => X(index, index)))
+    val e = Vector(superdiagonal, _Vector.tabulate(superdiagonal.rank) (index => X(index, index + 1)))
+    (d, e)
+  }
 }

@@ -14,9 +14,9 @@ object PlanerotSpecification extends Properties("Planerot") {
 		  n <- arbitrary[Double]
 	} yield (BigDecimal(n, java.math.MathContext.DECIMAL128))
 	
-	property("(c -s; s c) * (a; b) = (r; 0)") = forAll(limitedBigDecimalGen, limitedBigDecimalGen)  {(a : BigDecimal, b : BigDecimal) => {
+	property("(c s; -s c) * (a; b) = (r; 0)") = forAll(limitedBigDecimalGen, limitedBigDecimalGen)  {(a : BigDecimal, b : BigDecimal) => {
 			val (c, s, r) = planerot(a, b)
-			val J = Matrix(Nat(2), Nat(2), _Vector(c, -s, s, c))
+			val J = Matrix(Nat(2), Nat(2), _Vector(c, s, -s, c))
 			val x = Vector(Nat(2), _Vector(a, b))
 			val result = Vector(Nat(2), _Vector(r, 0))
 			

@@ -7,6 +7,6 @@ object planerot {
 	  if (r == BigDecimal(0))
 	    (0, 0, 0)
 	  else
-		(x / r, - y / r, r)
+		(x / r, y / r, r)
 	}
 }
